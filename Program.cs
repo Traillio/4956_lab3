@@ -14,22 +14,13 @@ namespace HelloWorld
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Please enter a .csv file name");
-
-            string? fileName = Console.ReadLine();
-            
-            while (fileName == null || !File.Exists(fileName))
-            {
-                Console.WriteLine("File does not exist");
-                fileName = Console.ReadLine();
-            }
-
-            readCsv(fileName);
+            readCsv("data.csv");
 
             string classLabel = "Got covid";
             string classValue = "1";
 
             int numberOfClass = getNumberOf(classLabel, classValue);
+            int numberOfNotClass = getNumberOf(classLabel, "0");
 
             Dictionary<string, int> jointCounts1 = getJointCounts(classLabel , classValue);
             Dictionary<string, int> jointCounts2 = getJointCounts(classLabel , "0");
@@ -37,19 +28,35 @@ namespace HelloWorld
             applyLaplacianSmoothing(jointCounts1);
             applyLaplacianSmoothing(jointCounts2);
 
-            // print joint counts
-            foreach (KeyValuePair<string, int> kvp in jointCounts1)
+            float z1 = z(jointCounts1, numberOfClass);
+            float z2 = z(jointCounts2, numberOfNotClass);
+
+            float normalizedConstant = z1 + z2;
+
+            float p1 = z1 / normalizedConstant;
+            float p2 = z2 / normalizedConstant;
+
+            Console.WriteLine("P(" + classLabel + " = " + classValue + ") = " + p1);
+            Console.WriteLine("P(" + classLabel + " = " + "0" + ") = " + p2);
+        }
+
+        //seriously what the fuck is z
+        static float z(Dictionary<string, int> jointCounts, int numberOfClass)
+        {
+            float z = 0;
+            foreach (KeyValuePair<string, int> kvp in jointCounts)
             {
-                Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                if(z == 0)
+                {
+                    z =(float)kvp.Value / ((float)numberOfClass + (float)jointCounts.Count);
+                }
+                else
+                {
+                    z *= (float)kvp.Value / ((float)numberOfClass + (float)jointCounts.Count);
+                }
             }
 
-            Console.WriteLine("-----------");
-
-            foreach (KeyValuePair<string, int> kvp in jointCounts2)
-            {
-                Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
-            }
-
+            return z;
         }
 
         static void applyLaplacianSmoothing(Dictionary<string, int> jointCounts)
