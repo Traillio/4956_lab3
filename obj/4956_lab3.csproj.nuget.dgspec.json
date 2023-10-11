@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\holyc\\Desktop\\4956\\4956_lab3\\4956_lab3.csproj": {}
+    "/Users/yujeongan/Documents/Projects/HCI/4956_lab3/4956_lab3.csproj": {}
   },
   "projects": {
-    "C:\\Users\\holyc\\Desktop\\4956\\4956_lab3\\4956_lab3.csproj": {
+    "/Users/yujeongan/Documents/Projects/HCI/4956_lab3/4956_lab3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\holyc\\Desktop\\4956\\4956_lab3\\4956_lab3.csproj",
+        "projectUniqueName": "/Users/yujeongan/Documents/Projects/HCI/4956_lab3/4956_lab3.csproj",
         "projectName": "4956_lab3",
-        "projectPath": "C:\\Users\\holyc\\Desktop\\4956\\4956_lab3\\4956_lab3.csproj",
-        "packagesPath": "C:\\Users\\holyc\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\holyc\\Desktop\\4956\\4956_lab3\\obj\\",
+        "projectPath": "/Users/yujeongan/Documents/Projects/HCI/4956_lab3/4956_lab3.csproj",
+        "packagesPath": "/Users/yujeongan/.nuget/packages/",
+        "outputPath": "/Users/yujeongan/Documents/Projects/HCI/4956_lab3/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\holyc\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/yujeongan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,6 +37,12 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "xunit": {
+              "target": "Package",
+              "version": "[2.5.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -55,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
         }
       }
     }

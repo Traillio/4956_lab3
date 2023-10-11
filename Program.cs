@@ -7,14 +7,20 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace HelloWorld
 {
-    class Program
+    public class Program
     {
         static ArrayList header = new ArrayList();
         static ArrayList dataLines = new ArrayList();
 
         static void Main(string[] args)
         {
-            readCsv("data.csv");
+            string fileName = "data.csv";
+            Predict(fileName);
+        }
+
+        public static float[] Predict(string fileName)
+        {
+            readCsv(fileName);
 
             string classLabel = "Got covid";
             string classValue = "1";
@@ -22,8 +28,8 @@ namespace HelloWorld
             int numberOfClass = getNumberOf(classLabel, classValue);
             int numberOfNotClass = getNumberOf(classLabel, "0");
 
-            Dictionary<string, int> jointCounts1 = getJointCounts(classLabel , classValue);
-            Dictionary<string, int> jointCounts2 = getJointCounts(classLabel , "0");
+            Dictionary<string, int> jointCounts1 = getJointCounts(classLabel, classValue);
+            Dictionary<string, int> jointCounts2 = getJointCounts(classLabel, "0");
 
             applyLaplacianSmoothing(jointCounts1);
             applyLaplacianSmoothing(jointCounts2);
@@ -38,6 +44,9 @@ namespace HelloWorld
 
             Console.WriteLine("P(" + classLabel + " = " + classValue + ") = " + p1);
             Console.WriteLine("P(" + classLabel + " = " + "0" + ") = " + p2);
+
+            float[] result = { p1, p2 };
+            return result;
         }
 
         //seriously what the fuck is z
@@ -46,9 +55,9 @@ namespace HelloWorld
             float z = 0;
             foreach (KeyValuePair<string, int> kvp in jointCounts)
             {
-                if(z == 0)
+                if (z == 0)
                 {
-                    z =(float)kvp.Value / ((float)numberOfClass + (float)jointCounts.Count);
+                    z = (float)kvp.Value / ((float)numberOfClass + (float)jointCounts.Count);
                 }
                 else
                 {
@@ -89,7 +98,7 @@ namespace HelloWorld
             {
                 if (line[classIndex] == classValue)
                 {
-                    foreach(string value in line)
+                    foreach (string value in line)
                     {
                         if (value != "0" && value != "1")
                         {
@@ -114,7 +123,7 @@ namespace HelloWorld
                     count++;
                 }
             }
-            
+
             return count;
         }
 
@@ -144,6 +153,6 @@ namespace HelloWorld
                 }
             }
         }
-        
+
     }
 }
