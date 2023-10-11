@@ -18,6 +18,11 @@ namespace HelloWorld
             Predict(fileName);
         }
 
+        /// <summary>
+        /// Predicts the probability of a patient having covid based on the data in the given file.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public static float[] Predict(string fileName)
         {
             readCsv(fileName);
@@ -34,8 +39,8 @@ namespace HelloWorld
             applyLaplacianSmoothing(jointCounts1);
             applyLaplacianSmoothing(jointCounts2);
 
-            float z1 = z(jointCounts1, numberOfClass);
-            float z2 = z(jointCounts2, numberOfNotClass);
+            float z1 = CalculateJointCountProbability(jointCounts1, numberOfClass);
+            float z2 = CalculateJointCountProbability(jointCounts2, numberOfNotClass);
 
             float normalizedConstant = z1 + z2;
 
@@ -49,26 +54,39 @@ namespace HelloWorld
             return result;
         }
 
-        //seriously what the fuck is z
-        static float z(Dictionary<string, int> jointCounts, int numberOfClass)
+        /// <summary>
+        /// Calculates the probability of a given set of joint counts occurring, given the number of classes and the total number of possible joint counts.
+        /// </summary>
+        /// <param name="jointCounts">A dictionary containing the joint counts for each attribute-value pair and class label.</param>
+        /// <param name="numClasses">The total number of classes in the dataset.</param>
+        /// <returns>The probability of the given set of joint counts occurring.</returns>
+        public static float CalculateJointCountProbability(Dictionary<string, int> jointCounts, int numClasses)
         {
-            float z = 0;
+            float probability = 0;
             foreach (KeyValuePair<string, int> kvp in jointCounts)
             {
-                if (z == 0)
+                // Calculate the probability of this joint count occurring
+                float countProbability = (float)kvp.Value / ((float)numClasses + (float)jointCounts.Count);
+
+                // Multiply the probability by the current value of probability
+                if (probability == 0)
                 {
-                    z = (float)kvp.Value / ((float)numberOfClass + (float)jointCounts.Count);
+                    probability = countProbability;
                 }
                 else
                 {
-                    z *= (float)kvp.Value / ((float)numberOfClass + (float)jointCounts.Count);
+                    probability *= countProbability;
                 }
             }
 
-            return z;
+            return probability;
         }
 
-        static void applyLaplacianSmoothing(Dictionary<string, int> jointCounts)
+        /// <summary>
+        /// Applies Laplacian smoothing to the given joint counts.
+        /// </summary>
+        /// <param name="jointCounts"></param>
+        public static void applyLaplacianSmoothing(Dictionary<string, int> jointCounts)
         {
             //add 1 to each value
             foreach (KeyValuePair<string, int> kvp in jointCounts)
@@ -77,6 +95,12 @@ namespace HelloWorld
             }
         }
 
+        /// <summary>
+        /// Returns a dictionary containing the joint counts for each attribute-value pair and class label.
+        /// </summary>
+        /// <param name="classLabel"></param>
+        /// <param name="classValue"></param>
+        /// <returns></returns>
         static Dictionary<string, int> getJointCounts(string classLabel, string classValue)
         {
             Dictionary<string, int> jointCounts = new Dictionary<string, int>();
@@ -112,6 +136,12 @@ namespace HelloWorld
             return jointCounts;
         }
 
+        /// <summary>
+        /// Returns the number of times the given value appears in the given column.
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         static int getNumberOf(string columnName, string value)
         {
             int index = header.IndexOf(columnName);
@@ -127,7 +157,10 @@ namespace HelloWorld
             return count;
         }
 
-
+        /// <summary>
+        /// Reads the given csv file into the header and dataLines ArrayLists.
+        /// </summary>
+        /// <param name="filename"></param>
         static void readCsv(string filename)
         {
             using (TextFieldParser parser = new TextFieldParser(filename))
